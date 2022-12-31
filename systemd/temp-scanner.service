@@ -1,0 +1,15 @@
+[Unit]
+Description=Temp Scanner Service
+After=bluetooth.service
+Wants=bluetooth.service
+
+[Service]
+Type=simple
+ExecStart=/opt/thermostat/scan.py
+# Provide plenty of time for bluetooth to start
+ExecStartPre=/bin/sleep 30
+Restart=Always
+
+[Install]
+WantedBy=multi-user.target
+

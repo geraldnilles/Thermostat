@@ -1,0 +1,10 @@
+[Unit]
+Description=Run the thermostat script every minute
+
+[Timer]
+OnBootSec=5min
+OnUnitActiveSec=2min
+
+[Install]
+WantedBy=timers.target
+

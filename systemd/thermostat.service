@@ -1,0 +1,8 @@
+[Unit]
+Description=Thermostat Run Script
+#After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/opt/thermostat/run.sh
+
