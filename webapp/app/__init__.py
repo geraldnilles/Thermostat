@@ -6,6 +6,24 @@ from flask import render_template
 
 SCRIPT_DIR = "/opt/thermostat/"
 
+# Uncomment this for local testing
+SCRIPT_DIR = "/home/gerald/github/RPi-Appliances/Thermostat/webapp/test/"
+
+MODE_TABLE = {
+    # Fan is on 100% fo the time
+    "fan_only":"fan.sh",
+    # TODO Fan periodically turns on for the first x minutes of every hour
+    # "circulate":"circulate.sh",
+    # Auto Mode - Heating and cooling automatically transitions
+    "auto":"auto.sh",
+    # Same as auto mode, but cooling is disabled
+    "heat_only":"heat_only.sh",
+    # Same as auto mode, but heating is disabled
+    "cool_only":"cool_only.sh",
+    # Everything is fully off
+    "off":"off.sh",
+}
+
 def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
 
@@ -31,31 +49,22 @@ def create_app(test_config=None):
     @app.route('/mode',methods=['GET'])
     def get_mode():
         # REturns the symlink
-        return os.readlink(os.path.join(SCRIPT_DIR,"run.sh"))
+        script = os.readlink(os.path.join(SCRIPT_DIR,"run.sh"))
+        for key,value in MODE_TABLE.items():
+            if script == value:
+                return key
+        return "None"
 
     @app.route('/mode/<mode>',methods=['GET'])
     def set_mode(mode):
         # Set the mode:
-        table = {
-            # Fan is on 100% fo the time
-            "fan_only":"fan.sh",
-            # TODO Fan periodically turns on for the first x minutes of every hour
-            # "circulate":"circulate.sh",
-            # Auto Mode - Heating and cooling automatically transitions
-            "auto":"auto.sh",
-            # Same as auto mode, but cooling is disabled
-            "heat_only":"heat_only.sh",
-            # Same as auto mode, but heating is disabled
-            "cool_only":"cool_only.sh",
-            # Everything is fully off
-            "off":"off.sh",
-        }
-        if mode not in table:
+        if mode not in MODE_TABLE:
             return "Invalid Mode set"
         # Delete the symlink and replace it with the new one 
         os.unlink( os.path.join(SCRIPT_DIR,"run.sh"))
-        os.symlink(os.path.join(SCRIPT_DIR,mode),os.path.join(SCRIPT_DIR,"run.sh"))
-        return "Set mode to ",mode
+        #os.symlink(os.path.join(SCRIPT_DIR,MODE_TABLE[mode]),os.path.join(SCRIPT_DIR,"run.sh"))
+        os.symlink(MODE_TABLE[mode],os.path.join(SCRIPT_DIR,"run.sh"))
+        return "Set mode to %s"%mode
 
     @app.route('/settemp',methods=['GET'])
     def get_settemp():
