@@ -9,14 +9,14 @@ cd "$(dirname "$0")"
 
 
 TIMER_FILE=/tmp/gpi-timer
-TIMEOUT=8
+TIMEOUT=5
 
 TARGET_MIN=$( ./temp_lookup.sh | awk '{ print $1 }' )
 TARGET_MAX=$( ./temp_lookup.sh | awk '{ print $2 }' )
 TARGET_DELTA=4
 
 # Offset the schedule.txt file by providing a integer
-TARGET_OFFSET=$( cat ./target_offset.txt )
+TARGET_OFFSET=$( cat /etc/thermostat/offset.txt )
 TARGET_MIN=$(( $TARGET_MIN + $TARGET_OFFSET ))
 TARGET_MAX=$(( $TARGET_MAX + $TARGET_OFFSET ))
 

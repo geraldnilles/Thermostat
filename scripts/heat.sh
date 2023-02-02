@@ -1,11 +1,17 @@
 #!/usr/bin/env bash
 
-
 set -e 
 
 cd "$(dirname "$0")"
 
-echo "Entering Heat Mode"
+if [ -z $NO_HEAT ]
+then
+	echo "Entering Heat Mode"
+else
+	echo "Heater Blocked"
+	./fan.sh
+	exit
+fi
 
 ./gpio.sh 20 1
 ./gpio.sh 26 1
