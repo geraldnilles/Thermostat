@@ -26,9 +26,9 @@
 		    <th scope="col">Max Temp</th>
 		</tr>
 	    	<tr>
-		    <td>68</td>
-		    <td>72</td>
-		    <td>77</td>
+		    <td><span id="lowtemp">68</span></td>
+		    <td><span id="currtemp">Sensing...</span></td>
+		    <td><span id="hightemp">77</span></td>
 		</tr>
 	    	<tr>
 		    <td></td>
@@ -40,19 +40,19 @@
         <div class="pb-3  " >
             <h4>Adjust</h4>
 	    <div class="btn-group btn-group-lg">
-                <button class="btn btn-primary temp" type="button"><i class="material-icons">arrow_downward</i></button>
-                <button class="btn btn-warning temp" type="button"><i class="material-icons">arrow_upward</i></button>
+                <button class="btn btn-primary temp" value="down" ><i class="material-icons">arrow_downward</i></button>
+                <button class="btn btn-warning temp" value="up"  ><i class="material-icons">arrow_upward</i></button>
 	    </div>
 
         </div>
         <div class="pb-3">
             <h4>Set Mode</h4>
 	     <div class="btn-group btn-group-lg">
-	         <button class="btn btn-secondary mode active" mode="auto" >Auto</button>
-		 <button class="btn btn-secondary mode " mode="cool_only" >Cool Only</button>
-		 <button class="btn btn-secondary mode " mode="heat_only" >Heat Only</button>
-		 <button class="btn btn-secondary mode " mode="fan_only" >Fan Only</button>
-		 <button class="btn btn-secondary mode " mode="off" >Off</button>
+	         <button class="btn btn-secondary mode active" value="auto" >Auto</button>
+		 <button class="btn btn-secondary mode " value="cool_only" >Cool Only</button>
+		 <button class="btn btn-secondary mode " value="heat_only" >Heat Only</button>
+		 <button class="btn btn-secondary mode " value="fan_only" >Fan Only</button>
+		 <button class="btn btn-secondary mode " value="off" >Off</button>
 	    </div>
         </div>
     </div>

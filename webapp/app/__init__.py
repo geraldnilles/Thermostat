@@ -4,10 +4,14 @@ import time
 from flask import Flask
 from flask import render_template
 
+import subprocess
+
 SCRIPT_DIR = "/opt/thermostat/"
+CONF_DIR = "/etc/thermostat/"
 
 # Uncomment this for local testing
 SCRIPT_DIR = "/home/gerald/github/RPi-Appliances/Thermostat/webapp/test/"
+CONF_DIR = "/home/gerald/github/RPi-Appliances/Thermostat/webapp/test/"
 
 MODE_TABLE = {
     # Fan is on 100% fo the time
@@ -71,20 +75,44 @@ def create_app(test_config=None):
         # Direction must be up or down
         # Modified the temp_offset.txt file
         # Returns the current temperature limits
-        return subprocess.check_output([os.path.join(SCRIPT_DIR,"temp_lookup.sh")])
+        out = subprocess.check_output([os.path.join(SCRIPT_DIR,"temp_lookup.sh")]).decode("utf-8")
+        out = out.strip()
+        temps = out.split(" ")
+        low = int(temps[0])
+        high = int(temps[1])
+        return [low, high]
     
 
     @app.route('/settemp/<direction>',methods=['GET'])
     def set_offset(direction):
         # Direction must be up or down
-        # Modified the temp_offset.txt file
+        if direction not in ["up","down"]:
+            return "Invalid Direction"
 
-        return "Setting Temp Offset "+offset
+        # Outcome of this adjustment will be stored in this offset.txt file
+        fn = os.path.join(CONF_DIR,"offset.txt")
+        offset = 0
+        if os.path.exists(fn):
+            with open(fn) as f:
+                offset = int(f.read())
+
+        # Inc or Dec depending in direction parameter
+        offset = offset + 1 if direction == "up" else offset - 1
+
+        if offset > 5 or offset < -5:
+            print("Offset Too Extreme")
+            return "Offset is too extreme"
+        # Write outcome to file
+        with open(fn,"w") as f:
+            f.write(str(offset))
+
+        print("Offset:",offset)
+        return "Setting Temp Offset %d"%(offset)
 
     @app.route('/temp',methods=['GET'])
     def get_temp():
         # Returns the current temperature limits
-        return subprocess.check_output([os.path.join(SCRIPT_DIR,"room_average.py")])
+        return  subprocess.check_output([os.path.join(SCRIPT_DIR,"room_average.sh")]).decode("utf-8")
 
     return app
 
