@@ -8,6 +8,7 @@ exec_prefix ?= $(prefix)
 # Where to put the executable for the command 'gcc'.
 bindir ?= $(exec_prefix)/bin
 systemd_unitdir ?= /lib/systemd
+sysconfdir ?= /etc
 
 srcdir = .
 
@@ -31,5 +32,6 @@ install:
 	
 	mkdir -p $(DESTDIR)$(sysconfdir)/thermostat
 	cp $(srcdir)/config/* $(DESTDIR)$(sysconfdir)/thermostat/
+	
 
 
