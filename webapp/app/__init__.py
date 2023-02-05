@@ -6,12 +6,14 @@ from flask import render_template
 
 import subprocess
 
-SCRIPT_DIR = "/opt/thermostat/"
+SCRIPT_DIR = "/usr/share/thermostat/"
 CONF_DIR = "/etc/thermostat/"
+RUN_DIR = "/run/thermostat/"
 
 # Uncomment this for local testing
-SCRIPT_DIR = "/home/gerald/github/RPi-Appliances/Thermostat/webapp/test/"
-CONF_DIR = "/home/gerald/github/RPi-Appliances/Thermostat/webapp/test/"
+# SCRIPT_DIR = "/home/gerald/github/RPi-Appliances/Thermostat/webapp/test/"
+# CONF_DIR = "/home/gerald/github/RPi-Appliances/Thermostat/webapp/test/"
+# RUN_DIR = "/home/gerald/github/RPi-Appliances/Thermostat/webapp/test/"
 
 MODE_TABLE = {
     # Fan is on 100% fo the time
@@ -52,10 +54,12 @@ def create_app(test_config=None):
 
     @app.route('/mode',methods=['GET'])
     def get_mode():
-        # REturns the symlink
-        script = os.readlink(os.path.join(SCRIPT_DIR,"run.sh"))
+        # Returns the path pointed to by the symlink
+        script = os.readlink(os.path.join(RUN_DIR,"mode.sh"))
         for key,value in MODE_TABLE.items():
-            if script == value:
+            # TODO Strip the path and properly compare rather that see if the
+            # script is a substring
+            if value in script:
                 return key
         return "None"
 
@@ -65,9 +69,8 @@ def create_app(test_config=None):
         if mode not in MODE_TABLE:
             return "Invalid Mode set"
         # Delete the symlink and replace it with the new one 
-        os.unlink( os.path.join(SCRIPT_DIR,"run.sh"))
-        #os.symlink(os.path.join(SCRIPT_DIR,MODE_TABLE[mode]),os.path.join(SCRIPT_DIR,"run.sh"))
-        os.symlink(MODE_TABLE[mode],os.path.join(SCRIPT_DIR,"run.sh"))
+        os.unlink( os.path.join(RUN_DIR,"mode.sh"))
+        os.symlink(os.path.join(SCRIPT_DIR,MODE_TABLE[mode]),os.path.join(RUN_DIR,"mode.sh"))
         return "Set mode to %s"%mode
 
     @app.route('/settemp',methods=['GET'])
@@ -90,7 +93,7 @@ def create_app(test_config=None):
             return "Invalid Direction"
 
         # Outcome of this adjustment will be stored in this offset.txt file
-        fn = os.path.join(CONF_DIR,"offset.txt")
+        fn = os.path.join(RUN_DIR,"offset.txt")
         offset = 0
         if os.path.exists(fn):
             with open(fn) as f:

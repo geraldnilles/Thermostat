@@ -9,12 +9,15 @@ cd "$(dirname "$0")"
 
 mkdir -p $RUN_DIR
 
-# If mode exists, set it to off.sh
+###################################
+# Configure the runtime temp files
+###################################
+
+# If no mode exists, set it to off.sh
 if [ ! -f $RUN_DIR/mode.sh ]
 then
 	echo Setting Default mode to off
 	ln -s $PWD/off_mode.sh $RUN_DIR/mode.sh
-
 fi
 
 # If no offset exists, set it to zero
@@ -33,3 +36,4 @@ fi
 
 
 $RUN_DIR/mode.sh
+

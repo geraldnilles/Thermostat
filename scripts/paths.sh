@@ -5,7 +5,7 @@ then
 
 	DESTDIR=""
 	export RUN_DIR=$DESTDIR/run/thermostat
-	export  CONFIG_DIR=$DESTDIR/etc/thermostat
+	export CONFIG_DIR=$DESTDIR/etc/thermostat
 	export APP_DIR=$DESTDIR/opt/thermostat
 
 else

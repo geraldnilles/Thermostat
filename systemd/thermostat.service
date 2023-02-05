@@ -4,5 +4,5 @@ Description=Thermostat Run Script
 
 [Service]
 Type=oneshot
-ExecStart=/opt/thermostat/run.sh
+ExecStart=/usr/share/thermostat/run.sh
 

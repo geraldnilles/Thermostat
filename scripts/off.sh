@@ -3,7 +3,7 @@
 
 set -e 
 
-cd $SCRIPT_DIR
+cd "$(dirname "$0")"
 
 echo "Entering Off Mode"
 
