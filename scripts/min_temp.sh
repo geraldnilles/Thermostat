@@ -1,7 +1,13 @@
 #!/usr/bin/env bash
 
 
-set -e 
+set -e
+
+if [ ! -z $TESTING ]
+then
+	echo $FAKE_TEMP
+	exit
+fi
 
 cd "$(dirname "$0")"
 

@@ -2,7 +2,7 @@
 
 set -e 
 
-cd "$(dirname "$0")"
+cd $SCRIPT_DIR
 
 NO_HEAT=1 ./auto.sh
 

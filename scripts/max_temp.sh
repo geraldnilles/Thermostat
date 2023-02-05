@@ -3,6 +3,12 @@
 
 set -e 
 
+if [ ! -z $TESTING ]
+then
+	echo $FAKE_TEMP
+	exit
+fi
+
 cd "$(dirname "$0")"
 
 # Get the average temp for each room,

@@ -3,6 +3,12 @@
 
 set -e 
 
+if [ ! -z $TESTING ]
+then
+	echo $FAKE_STATE
+	exit
+fi
+
 cd "$(dirname "$0")"
 
 HEAT=$( ./gpio.sh 26 )

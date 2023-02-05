@@ -5,10 +5,10 @@
 # This shoudl be called periodically by a systemd routing
 
 
-cd "$(dirname "$0")"
+cd $SCRIPT_DIR
 
 
-TIMER_FILE=/tmp/gpi-timer
+TIMER_FILE=$RUN_DIR/timer.txt
 TIMEOUT=5
 
 TARGET_MIN=$( ./temp_lookup.sh | awk '{ print $1 }' )
@@ -16,7 +16,7 @@ TARGET_MAX=$( ./temp_lookup.sh | awk '{ print $2 }' )
 TARGET_DELTA=4
 
 # Offset the schedule.txt file by providing a integer
-TARGET_OFFSET=$( cat /etc/thermostat/offset.txt )
+TARGET_OFFSET=$( cat $RUN_DIR/offset.txt )
 TARGET_MIN=$(( $TARGET_MIN + $TARGET_OFFSET ))
 TARGET_MAX=$(( $TARGET_MAX + $TARGET_OFFSET ))
 
@@ -35,14 +35,8 @@ then
 	exit
 fi
 
-# Initialize the Timer
-if [ -f $TIMER_FILE ]
-then
-	TIMER=$( cat $TIMER_FILE )
+TIMER=$( cat $TIMER_FILE )
 
-else
-	TIMER=0
-fi
 # Increment the Timer
 echo $(( $TIMER + 1 )) > $TIMER_FILE
 

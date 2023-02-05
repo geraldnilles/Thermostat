@@ -3,17 +3,24 @@
 # This will use the current time to determine the set temperature from the
 # schedule.txt file
 
-SCHEDULE="/etc/thermostat/schedule.txt"
+
+cd "$(dirname "$0")"
+
+SCHEDULE=$CONFIG_DIR/schedule.txt
+OFFSET=$( cat $RUN_DIR/offset.txt )
 
 HOUR=$( date +%H )
 OUTPUT=$( cat $SCHEDULE | awk -v HOUR=$HOUR '$1==HOUR { print $2 " "$3 }' )
+
+function apply_offset {
+	echo $(( $1 + $OFFSET )) $(( $2 + $OFFSET ))
+}
 
 # If no hour match was found, use the "default" line
 if [ -z "$OUTPUT" ]
 then
 	HOUR="default"
-	cat $SCHEDULE | awk -v HOUR=$HOUR '$2==HOUR { print $2 " "$3 }'
-else
-	echo $OUTPUT
+	OUTPUT=$( cat $SCHEDULE | awk -v HOUR=$HOUR '$2==HOUR { print $2 " "$3 }')
 fi
 
+apply_offset $OUTPUT

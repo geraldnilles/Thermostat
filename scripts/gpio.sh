@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if [ ! -z $TESTING ]
+then
+	echo Fake GPIO: $@
+	exit
+
+fi
 
 set -e
 
