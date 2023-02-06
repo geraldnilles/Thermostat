@@ -17,6 +17,9 @@ srcdir = .
 all:
 	echo "Nothign to compile"
 
+clean:
+	echo "Nothign to clean"
+
 install:
 	mkdir -p $(DESTDIR)/opt/thermostat
 	cp -r $(srcdir)/webapp/* $(DESTDIR)/opt/thermostat/
