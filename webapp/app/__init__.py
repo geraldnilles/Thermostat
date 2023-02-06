@@ -83,7 +83,7 @@ def create_app(test_config=None):
         temps = out.split(" ")
         low = int(temps[0])
         high = int(temps[1])
-        return [low, high]
+        return "[%d,%d]"%(low, high)
     
 
     @app.route('/settemp/<direction>',methods=['GET'])
@@ -115,7 +115,7 @@ def create_app(test_config=None):
     @app.route('/temp',methods=['GET'])
     def get_temp():
         # Returns the current temperature limits
-        return  subprocess.check_output([os.path.join(SCRIPT_DIR,"room_average.sh")]).decode("utf-8")
+        return  subprocess.check_output([os.path.join(SCRIPT_DIR,"room_average.py")]).decode("utf-8")
 
     return app
 

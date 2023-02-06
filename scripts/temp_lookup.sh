@@ -6,6 +6,8 @@
 
 cd "$(dirname "$0")"
 
+. ./paths.sh
+
 SCHEDULE=$CONFIG_DIR/schedule.txt
 OFFSET=$( cat $RUN_DIR/offset.txt )
 
