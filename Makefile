@@ -13,12 +13,9 @@ sysconfdir ?= /etc
 srcdir = .
 
 
-# Move the scripts file into /usr/share/thermostat
-#
-# Move the webapp into /opt/thermostat/
-# 
-# Install systemd files in the apprrate location
-#
+
+all:
+	echo "Nothign to compile"
 
 install:
 	mkdir -p $(DESTDIR)/opt/thermostat
@@ -34,4 +31,4 @@ install:
 	cp $(srcdir)/config/* $(DESTDIR)$(sysconfdir)/thermostat/
 	
 
-
+	
