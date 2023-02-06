@@ -1,0 +1,8 @@
+[Unit]
+Description=Reset the Timer
+
+[Service]
+Type=oneshot
+ExecStart=/bin/rm /run/thermostat/offset.txt
+
+
