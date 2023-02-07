@@ -27,7 +27,7 @@ MODE_TABLE = {
     # Same as auto mode, but heating is disabled
     "cool_only":"cool_only.sh",
     # Everything is fully off
-    "off":"off.sh",
+    "off":"off_mode.sh",
 }
 
 def create_app(test_config=None):
