@@ -43,7 +43,7 @@ function get_mode(){
 	    });
         }
     };
-    request.open("GET", "/mode");
+    request.open("GET", "mode");
     request.send();
 
 }
@@ -58,7 +58,7 @@ function get_temp(){
 
         }
     };
-    request.open("GET", "/temp");
+    request.open("GET", "temp");
     request.send();
 }
 
@@ -74,7 +74,7 @@ function get_settemp(){
 
         }
     };
-    request.open("GET", "/settemp");
+    request.open("GET", "settemp");
     request.send();
 }
 
