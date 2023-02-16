@@ -3,6 +3,7 @@ import os
 import time
 from flask import Flask
 from flask import render_template
+from flask import Response
 
 import subprocess
 
@@ -17,7 +18,7 @@ RUN_DIR = "/run/thermostat/"
 
 MODE_TABLE = {
     # Fan is on 100% fo the time
-    "fan_only":"fan.sh",
+    "fan_only":"fan_only.sh",
     # TODO Fan periodically turns on for the first x minutes of every hour
     # "circulate":"circulate.sh",
     # Auto Mode - Heating and cooling automatically transitions
@@ -50,7 +51,12 @@ def create_app(test_config=None):
     @app.route('/history')
     def history():
         # Plots the temp data and set point over the last 24 hours
-        return "History"
+        out = subprocess.check_output([os.path.join(SCRIPT_DIR,"plot.py")])
+
+        with open("/tmp/history.png","rb") as f:
+            data = f.read()
+
+        return Response(data,mimetype="image/png")
 
     @app.route('/mode',methods=['GET'])
     def get_mode():
@@ -115,7 +121,9 @@ def create_app(test_config=None):
     @app.route('/temp',methods=['GET'])
     def get_temp():
         # Returns the current temperature limits
-        return  subprocess.check_output([os.path.join(SCRIPT_DIR,"room_average.py")]).decode("utf-8")
+        return  subprocess.check_output(
+                    [os.path.join(SCRIPT_DIR,"room_average.py")]
+                ).decode("utf-8").replace("\n","<br>")
 
     return app
 

@@ -15,12 +15,6 @@ TARGET_MIN=$( ./temp_lookup.sh | awk '{ print $1 }' )
 TARGET_MAX=$( ./temp_lookup.sh | awk '{ print $2 }' )
 TARGET_DELTA=4
 
-# Offset the schedule.txt file by providing a integer
-TARGET_OFFSET=$( cat $RUN_DIR/offset.txt )
-TARGET_MIN=$(( $TARGET_MIN + $TARGET_OFFSET ))
-TARGET_MAX=$(( $TARGET_MAX + $TARGET_OFFSET ))
-
-# TODO Print out the temp from each room for journalctl log purposes
 
 # Find the room with the minimum and maximum temperature
 TEMP_MIN=$( ./min_temp.sh )
@@ -44,6 +38,12 @@ echo $(( $TIMER + 1 )) > $TIMER_FILE
 STATE=$( ./get_state.sh )
 
 echo $TARGET_MIN $TARGET_MAX $TARGET_DELTA $TEMP_MIN $TEMP_MAX $TEMP_DELTA $STATE $TIMER
+
+if [ ! -z $FAN_ON ]
+then
+	./fan.sh
+	exit
+fi
 
 case $STATE in
 	off)
@@ -109,7 +109,6 @@ case $STATE in
 
 	;;
 	heat)
-		# TODO Implement a timeout?
 		if [ $TEMP_MIN -gt $TARGET_MIN ]
 		then
 			./fan.sh
