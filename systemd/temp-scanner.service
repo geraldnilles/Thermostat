@@ -7,8 +7,8 @@ Wants=bluetooth.service
 Type=simple
 ExecStart=/usr/share/thermostat/scan.py
 # Provide plenty of time for bluetooth to start
-ExecStartPre=/bin/sleep 30
 Restart=Always
+RestartSec=30s
 
 [Install]
 WantedBy=multi-user.target
