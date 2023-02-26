@@ -21,7 +21,7 @@ async def main():
     ax = None
     for name,room in rooms:
         d = room.resample("5min",on="Time").mean()
-        d.plot.line(y="Temp", ax=ax,label=name)
+        ax = d.plot.line(y="Temp", ax=ax,label=name)
 
     ax.figure.savefig("/tmp/history.png",format="png")
 
