@@ -20,7 +20,7 @@ async def main():
     rooms = df.groupby("Room")
     ax = None
     for name,room in rooms:
-        d = room.resample("5min",on="Time").mean(numeric_only=True)
+        d = room.resample("5min",on="Time").mean()
         d.plot.line(y="Temp", ax=ax,label=name)
 
     ax.figure.savefig("/tmp/history.png",format="png")
