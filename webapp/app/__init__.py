@@ -51,7 +51,6 @@ def create_app(test_config=None):
     @app.route('/history')
     def history():
         # Plots the temp data and set point over the last 24 hours
-        out = subprocess.check_output([os.path.join(SCRIPT_DIR,"plot.py")])
 
         with open("/tmp/history.png","rb") as f:
             data = f.read()

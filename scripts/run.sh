@@ -37,3 +37,7 @@ fi
 
 $RUN_DIR/mode.sh
 
+# Generate a Temp Plot at the end of each run
+./plot.py
+
+
