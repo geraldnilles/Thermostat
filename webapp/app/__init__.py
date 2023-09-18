@@ -51,6 +51,7 @@ def create_app(test_config=None):
     @app.route('/history')
     def history():
         # Plots the temp data and set point over the last 24 hours
+        # out = subprocess.check_output([os.path.join(SCRIPT_DIR,"plot.py")])
 
         with open("/tmp/history.png","rb") as f:
             data = f.read()
@@ -107,7 +108,7 @@ def create_app(test_config=None):
         # Inc or Dec depending in direction parameter
         offset = offset + 1 if direction == "up" else offset - 1
 
-        if offset > 5 or offset < -5:
+        if offset > 3 or offset < -2:
             print("Offset Too Extreme")
             return "Offset is too extreme"
         # Write outcome to file

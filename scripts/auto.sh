@@ -9,7 +9,7 @@ cd $SCRIPT_DIR
 
 
 TIMER_FILE=$RUN_DIR/timer.txt
-TIMEOUT=5
+TIMEOUT=7
 
 TARGET_MIN=$( ./temp_lookup.sh | awk '{ print $1 }' )
 TARGET_MAX=$( ./temp_lookup.sh | awk '{ print $2 }' )
