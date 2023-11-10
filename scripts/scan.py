@@ -12,32 +12,52 @@ df = pd.DataFrame(columns=["Time","Room","Temp"])
 
 db_cutoff = datetime.timedelta(days=1)
 
+govee_name_map = {
+            "GVH5075_2787": "Govee_BabyRoom",
+            "GVH5075_7C2E": "Govee_MasterBed" 
+            }
+
+def gpi(device,adv_data):
+    data = adv_data.manufacturer_data[65535]
+    tempC = struct.unpack("<H",data)[0]/100.0
+    tempF = tempC*9/5+32
+    return [ datetime.datetime.now(), device.name, tempF ]
+
+def govee(device,adv_data):
+    rawdata = int(adv_data.manufacturer_data[60552][1:4].hex(),16)
+    tempC = rawdata/1000/10
+    tempF = tempC*9/5+32
+    humidity = rawdata%1000/10
+    return [ datetime.datetime.now(), govee_name_map[device.name], tempF ]
+
 def callback(device,adv_data):
     global df
+    if "gpiTemp" in device.name:
+        data = gpi(device,adv_data)
+    elif device.name in govee_name_map:
+        data = govee(device,adv_data)
+    else:
+        return
     
-    if device.name == "Master Temperature" or device.name == "Bedroom Temperature" or "gpiTemp" in device.name:
+    now = data[0]
+    room_name = data[1]
+    tempF = data[2]
 
-        # Timestamp the data
-        now = datetime.datetime.now()
-        # If last datarow is newer than 5 seconds, then skip 
-        last = df[df["Room"] == device.name].tail(1)
-        if len(last) > 0:
-            if last.iloc[0]["Time"] > now - datetime.timedelta(seconds=5):
-                return
-
-        data = adv_data.manufacturer_data[65535]
-        tempC = struct.unpack("<H",data)[0]/100.0
-        tempF = tempC*9/5+32
-
-        # throw out zero data
-        if tempF < 40:
+    # If last datarow is newer than 5 seconds, then skip 
+    last = df[df["Room"] == room_name].tail(1)
+    if len(last) > 0:
+        if last.iloc[0]["Time"] > now - datetime.timedelta(seconds=5):
             return
-        df.loc[len(df.index)] = [now, device.name, tempF]
 
-        # Delete rows that are older than the db_cutoff
-        # TODO move this into its own task that runs much less frequently
-        cutoff = now - db_cutoff
-        df = df[df["Time"] > cutoff].reset_index(drop=True).copy(True)
+    # throw out zero data
+    if tempF < 40:
+        return
+    df.loc[len(df.index)] = data
+
+    # Delete rows that are older than the db_cutoff
+    # TODO move this into its own task that runs much less frequently
+    cutoff = now - db_cutoff
+    df = df[df["Time"] > cutoff].reset_index(drop=True).copy(True)
 
 
 # Print last 10 rows every 10 seconds
