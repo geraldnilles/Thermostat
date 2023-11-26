@@ -88,6 +88,10 @@ case $STATE in
 			exit
 		fi
 
+		# Re-enter the Fan State
+		./fan.sh
+		exit
+
 	;;
 	cool)
 		if [ $TEMP_MAX -lt $TARGET_MAX ]
