@@ -15,6 +15,8 @@ db_cutoff = datetime.timedelta(days=1)
 govee_name_map = {
             "GVH5075_2787": "Govee_BabyRoom",
             "GVH5075_7C2E": "Govee_MasterBed" 
+            "GVH5075_A8FD": "Govee_LivingRoom",
+            "GVH5075_B35A": "Govee_Kitchen",
             }
 
 def gpi(device,adv_data):
