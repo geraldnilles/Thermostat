@@ -39,11 +39,20 @@ STATE=$( ./get_state.sh )
 
 echo $TARGET_MIN $TARGET_MAX $TARGET_DELTA $TEMP_MIN $TEMP_MAX $TEMP_DELTA $STATE $TIMER
 
+# If Fan is forced on, then short circuit the rest of the logic and enable the fan by itself
 if [ ! -z $FAN_ON ]
 then
 	./fan.sh
 	exit
 fi
+
+# If Fan is forced off, then short circuit the rest of the logic and shut it all down
+if [ ! -z $NO_FAN ]
+then
+	./off.sh
+	exit
+fi
+
 
 case $STATE in
 	off)
