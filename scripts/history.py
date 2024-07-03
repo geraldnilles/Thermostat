@@ -17,11 +17,12 @@ import scan
 async def main():
     db = await scan.client()
     df = db[db["Temp"] > 50]
+    df = df.groupby("Room").resample('5min', on="Time").mean().reset_index()
     #print(df.tail(50))
     for room in pd.unique(db["Room"]):
         print(room)
-        d = df[df["Room"] == room]
-        print(d.resample("5min",on="Time").mean().tail(25))
+        print(df[df["Room"] == room].tail(10))
+        #print(d.resample("5min",on="Time").mean().tail(25))
 
 asyncio.run(main())
 

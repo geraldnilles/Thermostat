@@ -16,18 +16,19 @@ then
 	exit -1
 fi
 
+GPIO=$(( 512 + $1 ))
 
 cd /sys/class/gpio
 # Export the GPIO if it has not been exported already
-if [ ! -d gpio$1 ]
+if [ ! -d gpio$GPIO ]
 then
 	echo "Setting Up GPIO"
-	echo $1 > export
-	cd gpio$1
+	echo $GPIO > export
+	cd gpio$GPIO
 	echo out > direction
 	sleep 1
 else
-	cd gpio$1
+	cd gpio$GPIO
 
 fi
 

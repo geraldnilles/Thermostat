@@ -17,14 +17,12 @@ import scan
 async def main():
     db = await scan.client()
     df = db[db["Temp"] > 50]
-    rooms = df.groupby("Room")
+    df = df.groupby("Room").resample('5min', on="Time").mean().reset_index()
+    #print(df.tail(50))
     ax = None
-    for name,room in rooms:
-        d = room.resample("5min",on="Time").mean()
-        ax = d.plot.line(y="Temp", ax=ax,label=name)
-
+    for room in pd.unique(db["Room"]):
+        ax = df[df["Room"]==room].plot.line(x="Time",y="Temp", ax=ax,label=room)
     ax.figure.savefig("/tmp/history.png",format="png")
-
 
 asyncio.run(main())
 
