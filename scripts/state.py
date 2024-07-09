@@ -23,7 +23,7 @@ class Mode(Enum):
 
 def set(mode):
     if os.getenv("TESTING"):
-        print("Mode set to ",mode)
+        print("Mode set to",mode)
 
     if mode == Mode.Off:
         gpio.clear(FAN_GPIO)
@@ -46,9 +46,6 @@ def set(mode):
         gpio.set(COOL_GPIO)
 
 def get():
-    heat_gpio = 26
-    fan_gpio = 20
-    cool_gpio = 21
 
     # Get State of the various GPIOs
     fan = gpio.get(FAN_GPIO)
@@ -75,7 +72,7 @@ def state(default, fn, value=None):
             with open(path, 'r') as f:
                 value = f.read()
         else:
-            value = default
+            value = str(default)
 
     if not os.path.exists(DIRECTORY):
         os.makedirs(DIRECTORY)
@@ -84,10 +81,10 @@ def state(default, fn, value=None):
     return value
 
 def offset(value = None):
-    return int(state(default=0,fn="offset.txt",value=str(value)))
+    return int(state(default=0,fn="offset.txt",value=value))
 
 def timeout(value=None):
-    return int(state(default=0,fn="timeout.txt",value=str(value)))
+    return int(state(default=0,fn="timeout.txt",value=value))
 
 # Reads which "Mode" is written tot he active.txt file
 def active(value=None):

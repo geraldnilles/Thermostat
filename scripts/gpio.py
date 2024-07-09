@@ -34,7 +34,7 @@ def set(num):
 
 def clear(num):
     if os.getenv("TESTING"):
-        CACHE[num] = 1
+        CACHE[num] = 0
         return
 
     config(num)
@@ -42,7 +42,7 @@ def clear(num):
     with open(gpio_dir+"/value") as f:
         f.write(str(1))
 
-def get():
+def get(num):
     if os.getenv("TESTING"):
         return CACHE[num]
 

@@ -6,6 +6,17 @@ import datetime
 import room_temps
 
 class Inputs:
+    def __str__(self):
+        return (
+            f"temp_above_range: {self.temp_above_range}\n"
+            f"temp_below_range: {self.temp_below_range}\n"
+            f"temp_within_range: {self.temp_within_range}\n"
+            f"temp_outside_range: {self.temp_outside_range}\n"
+            f"top_of_hour: {self.top_of_hour}\n"
+            f"active_mode: {self.active_mode}\n"
+            f"idle_mode: {self.idle_mode}\n"
+        )
+        
     temp_above_range = False
     temp_below_range = False
     temp_within_range = True
@@ -15,7 +26,7 @@ class Inputs:
     idle_mode = state.Mode.Off
 
 
-def get_current_minute():
+def get_current_minutes():
     now = datetime.datetime.now()
     return now.minute
 
@@ -46,6 +57,8 @@ def process_inputs():
     inputs.active_mode = state.active()
     inputs.idle_mode = state.idle()
 
+    return inputs
+
 
 def off_state(inputs):
     """
@@ -62,15 +75,15 @@ def off_state(inputs):
     * Idle Mode == Fan
     """
     if inputs.temp_outside_range or inputs.temp_above_range or inputs.temp_below_range or inputs.top_of_hour:
-        if active_mode != state.Mode.Off:
+        if inputs.active_mode != state.Mode.Off:
             state.set(state.Mode.Fan)
             return True
 
-    if idle_mode == state.Mode.Fan:
+    if inputs.idle_mode == state.Mode.Fan:
         state.set(state.Mode.Fan)
         return True
 
-def fan_sate(inputs):
+def fan_state(inputs):
     """
     ### Fan to Cool
 
@@ -162,13 +175,15 @@ def heat_state(inputs):
         return True
         
 
-def main():
+def main(verbose = False):
     inputs = process_inputs()
+    if verbose:
+        print(inputs)
 
     current_state = state.get()
-    
+
     if current_state == state.Mode.Off:
-        off_state(inptus)
+        off_state(inputs)
     elif current_state == state.Mode.Fan:
         fan_state(inputs)
     elif current_state == state.Mode.Cool:
@@ -176,7 +191,24 @@ def main():
     elif current_state == state.Mode.Heat:
         heat_state(inputs)
 
+    if verbose:
+        print("---")
+        print(current_state,"to",state.get())
+        print("---")
 
+
+def unit_test():
+    main(True)
+    main(True)
+    main(True)
+
+    state.active(state.Mode.Off)
+    main(True)
+    main(True)
+    main(True)
 
 if __name__ == "__main__":
-    main()
+    if os.getenv("TESTING"):
+        unit_test()
+    else:
+        main(False)

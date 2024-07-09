@@ -7,10 +7,13 @@ import datetime
 if not os.getenv("TESTING"):
     import scan
 
+if os.getenv("TESTING"):
+    FAKE_TEMPS = [72,73,74,78]
+
 def get():
     
     if os.getenv("TESTING"):
-        return [72,73,74,75]
+        return FAKE_TEMPS
         
     db = asyncio.run(scan.client())
     df = db[db["Temp"] > 50]
