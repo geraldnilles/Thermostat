@@ -25,22 +25,22 @@ def set(mode):
     if os.getenv("TESTING"):
         print("Mode set to ",mode)
 
-    if mode == Mode.Off
+    if mode == Mode.Off:
         gpio.clear(FAN_GPIO)
         gpio.clear(HEAT_GPIO)
         gpio.clear(COOL_GPIO)
 
-    elif mode == Mode.Fan
+    elif mode == Mode.Fan:
         gpio.set(FAN_GPIO)
         gpio.clear(HEAT_GPIO)
         gpio.clear(COOL_GPIO)
 
-    elif mode == Mode.Heat
+    elif mode == Mode.Heat:
         gpio.set(FAN_GPIO)
         gpio.set(HEAT_GPIO)
         gpio.clear(COOL_GPIO)
 
-    elif mode == Mode.Cool
+    elif mode == Mode.Cool:
         gpio.set(FAN_GPIO)
         gpio.clear(HEAT_GPIO)
         gpio.set(COOL_GPIO)

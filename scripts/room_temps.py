@@ -4,7 +4,8 @@ import os
 import asyncio
 import datetime
 
-import scan
+if not os.getenv("TESTING"):
+    import scan
 
 def get():
     

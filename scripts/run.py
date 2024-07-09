@@ -97,8 +97,8 @@ def fan_sate(inputs):
         state.set(state.Mode.Off)
         return True
 
-    if inputs.temp_within_range
-        if inputs.idle_mode == state.Mode.Off
+    if inputs.temp_within_range:
+        if inputs.idle_mode == state.Mode.Off:
             if not inputs.top_of_hour:
                 state.set(state.Mode.Off)
                 return True

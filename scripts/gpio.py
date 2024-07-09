@@ -14,7 +14,7 @@ if os.getenv("TESTING"):
 def config(num):
     num = OFFSET + num
     gpio_dir = "/sys/class/gpio/gpio%d"%num
-    if not os.path.exists(gpio_dir)
+    if not os.path.exists(gpio_dir):
         with open("/sys/class/gpio/export") as f:
             f.write(str(num))
         time.sleep(0.1)
