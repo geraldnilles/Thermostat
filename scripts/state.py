@@ -7,6 +7,10 @@ from enum import Enum,auto
 
 DIRECTORY = "/tmp/thermostat"
 
+HEAT_GPIO = 26
+FAN_GPIO = 20
+COOL_GPIO = 21
+
 class Mode(Enum):
     Off = auto()
     Heat = auto()
@@ -15,29 +19,46 @@ class Mode(Enum):
     Fan = auto()
 
 def set(mode):
-    heat_gpio = 21
-    fan_gpio = 17
-    cool_gpio = 24
 
     if mode == Mode.Off
-        gpio.clear(fan_gpio)
-        gpio.clear(heat_gpio)
-        gpio.clear(cool_gpio)
+        gpio.clear(FAN_GPIO)
+        gpio.clear(HEAT_GPIO)
+        gpio.clear(COOL_GPIO)
 
     elif mode == Mode.Fan
-        gpio.set(fan_gpio)
-        gpio.clear(heat_gpio)
-        gpio.clear(cool_gpio)
+        gpio.set(FAN_GPIO)
+        gpio.clear(HEAT_GPIO)
+        gpio.clear(COOL_GPIO)
 
     elif mode == Mode.Heat
-        gpio.clear(fan_gpio)
-        gpio.set(heat_gpio)
-        gpio.clear(cool_gpio)
+        gpio.set(FAN_GPIO)
+        gpio.set(HEAT_GPIO)
+        gpio.clear(COOL_GPIO)
 
     elif mode == Mode.Cool
-        gpio.set(fan_gpio)
-        gpio.clear(heat_gpio)
-        gpio.set(cool_gpio)
+        gpio.set(FAN_GPIO)
+        gpio.clear(HEAT_GPIO)
+        gpio.set(COOL_GPIO)
+
+def get():
+    heat_gpio = 26
+    fan_gpio = 20
+    cool_gpio = 21
+
+    # Get State of the various GPIOs
+    fan = gpio.get(FAN_GPIO)
+    heat = gpio.get(HEAT_GPIO)
+    cool = gpio.get(COOL_GPIO)
+
+    # Deduce the current state based on the GPIOs
+    if heat:
+        return Mode.Heat
+    elif cool:
+        return Mode.Cool
+    elif fan:
+        return Mode.Fan
+    else:
+        return Mode.Off
 
 
 def state(default, fn, value=None):
@@ -63,12 +84,14 @@ def offset(value = None):
 def timeout(value=None):
     return int(state(default=0,fn="timeout.txt",value=str(value)))
 
+# Reads which "Mode" is written tot he active.txt file
 def active(value=None):
     if value == None:
         return Mode[state(default=Mode.Auto.name,fn="active.txt",value=value)]
     else:
         return Mode[state(default=Mode.Auto.name,fn="active.txt",value=value.name)]
 
+# Reads which "Mode" is written tot he idle.txt file
 def idle(value=None):
     if value == None:
         return Mode[state(default=Mode.Off.name,fn="idle.txt",value=value)]

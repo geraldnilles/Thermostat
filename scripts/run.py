@@ -3,6 +3,7 @@
 import os
 import state
 import datetime
+import room_temps
 
 class Inputs:
     temp_above_range = False
@@ -18,15 +19,23 @@ def get_current_minute():
     now = datetime.datetime.now()
     return now.minute
 
-def process_inputs(room_temps, temp_range, active_mode, idle_mode):
+def process_inputs():
     inputs = Inputs()
-    for t in room_temps:
+
+    # Define the default temp range
+    temp_range = [68,77]
+    # Increase/Decrease by the offset
+    offset = state.offset()
+    temp_range = [t + offset for t in temp_range ]
+
+    for t in room_temps.get():
         if t > max(temp_range):
             inputs.temp_above_range = True
             inputs.temp_within_range = False
         if t < min(temp_range):
             inputs.temp_below_range = True
             inputs.temp_within_range = False
+
     if inputs.temp_above_range and inputs.temp_below_range:
         inputs.temp_outside_range = True
 
@@ -36,8 +45,6 @@ def process_inputs(room_temps, temp_range, active_mode, idle_mode):
 
     inputs.active_mode = state.active()
     inputs.idle_mode = state.idle()
-                
-
 
 
 def off_state(inputs):
@@ -156,11 +163,10 @@ def heat_state(inputs):
         
 
 def main():
-    room_temps = [72]
     temp_range = [68,77]
     active_mode = state.Mode.Auto
     idle_mode = state.Mode.Off
-    inputs = process_inputs(room_temps, temp_range,active_mode, idle_mode)
+    inputs = process_inputs( temp_range,active_mode, idle_mode)
 
     current_state = state.get()
     
