@@ -5,7 +5,10 @@ import gpio
 
 from enum import Enum,auto
 
-DIRECTORY = "/tmp/thermostat"
+if os.getenv("TESTING"):
+    DIRECTORY = "/tmp/thermostat"
+else:
+    DIRECTORY = "/run/thermostat"
 
 HEAT_GPIO = 26
 FAN_GPIO = 20
@@ -19,6 +22,8 @@ class Mode(Enum):
     Fan = auto()
 
 def set(mode):
+    if os.getenv("TESTING"):
+        print("Mode set to ",mode)
 
     if mode == Mode.Off
         gpio.clear(FAN_GPIO)

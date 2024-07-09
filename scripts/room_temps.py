@@ -1,11 +1,16 @@
 #!/usr/bin/env python3
 
+import os
 import asyncio
 import datetime
 
 import scan
 
 def get():
+    
+    if os.getenv("TESTING"):
+        return [72,73,74,75]
+        
     db = asyncio.run(scan.client())
     df = db[db["Temp"] > 50]
 

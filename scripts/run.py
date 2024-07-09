@@ -163,10 +163,7 @@ def heat_state(inputs):
         
 
 def main():
-    temp_range = [68,77]
-    active_mode = state.Mode.Auto
-    idle_mode = state.Mode.Off
-    inputs = process_inputs( temp_range,active_mode, idle_mode)
+    inputs = process_inputs()
 
     current_state = state.get()
     
