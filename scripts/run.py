@@ -46,6 +46,10 @@ def process_inputs():
         if t < min(temp_range):
             inputs.temp_below_range = True
             inputs.temp_within_range = False
+        # If on the border, it is not considered "within range"
+        if t == max(temp_range) or t == min(temp_range):
+            inputs.temp_within_range = False
+            
 
     if inputs.temp_above_range and inputs.temp_below_range:
         inputs.temp_outside_range = True
@@ -116,6 +120,10 @@ def fan_state(inputs):
                 state.set(state.Mode.Off)
                 return True
 
+    ### If Temps outside the range, keep it the current Fan State
+    if inputs.temp_outside_range:
+        return True
+
     ### Fan to Cool Transitions
     if inputs.temp_above_range:
         if inputs.active_mode == state.Mode.Cool or inputs.active_mode == state.Mode.Auto:
@@ -151,6 +159,10 @@ def cool_state(inputs):
         state.set(state.Mode.Fan)
         return True
 
+    if inputs.temp_below_range:
+        state.set(state.Mode.Fan)
+        return True
+
 def heat_state(inputs):
     """
     ### Heat to Fan
@@ -171,6 +183,10 @@ def heat_state(inputs):
         return True
 
     if inputs.temp_outside_range:
+        state.set(state.Mode.Fan)
+        return True
+
+    if inputs.temp_above_range:
         state.set(state.Mode.Fan)
         return True
         
@@ -198,14 +214,68 @@ def main(verbose = False):
 
 
 def unit_test():
-    main(True)
-    main(True)
-    main(True)
+    # Zero out to a nominal state
+    state.active(state.Mode.Auto)
+    state.idle(state.Mode.Off)
+    room_temps.FAKE_TEMPS = [72, 72]
+    main()
+    main()
+    assert state.get() == state.Mode.Off, "Fail: Bad State"
 
-    state.active(state.Mode.Off)
-    main(True)
-    main(True)
-    main(True)
+    room_temps.FAKE_TEMPS = [72, 78]
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Cool, "Fail: Bad State"
+
+    room_temps.FAKE_TEMPS = [72, 77]
+    main()
+    assert state.get() == state.Mode.Cool, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Cool, "Fail: Bad State"
+
+    room_temps.FAKE_TEMPS = [72, 76]
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Off, "Fail: Bad State"
+
+    room_temps.FAKE_TEMPS = [67, 72]
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Heat, "Fail: Bad State"
+
+    room_temps.FAKE_TEMPS = [68, 72]
+    main()
+    assert state.get() == state.Mode.Heat, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Heat, "Fail: Bad State"
+
+    room_temps.FAKE_TEMPS = [69, 72]
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Off, "Fail: Bad State"
+
+    room_temps.FAKE_TEMPS = [67, 72]
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Heat, "Fail: Bad State"
+
+    room_temps.FAKE_TEMPS = [68, 72]
+    main()
+    assert state.get() == state.Mode.Heat, "Fail: Bad State"
+    room_temps.FAKE_TEMPS = [68, 77]
+    main()
+    assert state.get() == state.Mode.Heat, "Fail: Bad State"
+    room_temps.FAKE_TEMPS = [68, 78]
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+
+
+    print("Unit Test Complete: All Tests Passed")
 
 if __name__ == "__main__":
     if os.getenv("TESTING"):
