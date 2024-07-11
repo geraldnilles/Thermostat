@@ -77,14 +77,22 @@ def state(default, fn, value=None):
     if not os.path.exists(DIRECTORY):
         os.makedirs(DIRECTORY)
     with open(path, 'w') as f:
-        f.write(value)
+        f.write(str(value))
     return value
 
 def offset(value = None):
     return int(state(default=0,fn="offset.txt",value=value))
 
 def timeout(value=None):
-    return int(state(default=0,fn="timeout.txt",value=value))
+    # TImeout is incremental. If zero, zero out the timeout counter.  If non
+    # zero, add it to the current value
+    current_value = int(state(default=0,fn="timeout.txt",value=None))
+    if value == None:
+        return int(state(default=0,fn="timeout.txt",value=value))
+    elif value == 0:
+        return int(state(default=0,fn="timeout.txt",value=value)) 
+    else:
+        return int(state(default=0,fn="timeout.txt",value=current_value + value))
 
 # Reads which "Mode" is written tot he active.txt file
 def active(value=None):
@@ -104,3 +112,12 @@ def idle(value=None):
 if __name__ == "__main__":
     print (active(Mode.Cool))
     #print (idle(Mode.Off))
+
+    timeout(0)
+    print(timeout())
+    timeout(1)
+    print(timeout())
+    timeout(2)
+    print(timeout())
+    timeout(0)
+    print(timeout())
