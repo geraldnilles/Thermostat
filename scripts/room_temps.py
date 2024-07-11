@@ -25,7 +25,7 @@ def get():
     averages = []
     for r in rooms:
 	# Grap the last 5 reading and average them
-        average.append(df[df["Room"] == r]["Temp"].mean())
+        averages.append(df[df["Room"] == r]["Temp"].mean())
 
     return averages
 
