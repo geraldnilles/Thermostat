@@ -5,6 +5,8 @@ import state
 import datetime
 import room_temps
 
+TIMEOUT_LIMIT = 7
+
 class Inputs:
     def __str__(self):
         return (
@@ -15,6 +17,7 @@ class Inputs:
             f"top_of_hour: {self.top_of_hour}\n"
             f"active_mode: {self.active_mode}\n"
             f"idle_mode: {self.idle_mode}\n"
+            f"timeout_counter: {self.timeout_counter}\n"
         )
         
     temp_above_range = False
@@ -24,6 +27,7 @@ class Inputs:
     top_of_hour = False
     active_mode = state.Mode.Auto
     idle_mode = state.Mode.Off
+    timeout_counter = 0
 
 
 def get_current_minutes():
@@ -62,6 +66,8 @@ def process_inputs():
 
     inputs.active_mode = state.active()
     inputs.idle_mode = state.idle()
+
+    inputs.timeout_counter = state.timeout()
 
     return inputs
 
@@ -171,6 +177,12 @@ def cool_state(inputs):
         state.set(state.Mode.Fan)
         return True
 
+    # If Cooling Timeout is reached, switch back to fan
+    if inputs.timeout_counter > TIMEOUT_LIMIT:
+        state.set(state.Mode.Fan)
+        return True
+        
+
 def heat_state(inputs):
     """
     ### Heat to Fan
@@ -197,6 +209,11 @@ def heat_state(inputs):
     if inputs.temp_above_range:
         state.set(state.Mode.Fan)
         return True
+
+    # If Heating Timeout is reached, switch back to fan
+    if inputs.timeout_counter > TIMEOUT_LIMIT:
+        state.set(state.Mode.Fan)
+        return True
         
 
 def main(verbose = False):
@@ -219,6 +236,9 @@ def main(verbose = False):
         print("---")
         print(current_state,"to",state.get())
         print("---")
+
+    # Increment the timeout counter by 1
+    state.timeout(1)
 
 
 def unit_test():
@@ -408,6 +428,49 @@ def unit_test():
     assert state.get() == state.Mode.Cool, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Cool, "Fail: Bad State"
+
+
+    # Reset everything to idle
+    state.idle(state.Mode.Off)
+    state.active(state.Mode.Auto)
+
+    room_temps.FAKE_TEMPS = [72,72]
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Off, "Fail: Bad State"
+
+    # Check the Cooling Timeout works correctly.  
+    room_temps.FAKE_TEMPS = [79,72]
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+    for x in range(TIMEOUT_LIMIT+1):
+        main()
+        assert state.get() == state.Mode.Cool, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Cool, "Fail: Bad State"
+
+    # Check the Heating Timeout works correctly.  
+    room_temps.FAKE_TEMPS = [67,72]
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+    for x in range(TIMEOUT_LIMIT+1):
+        main()
+        assert state.get() == state.Mode.Heat, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Heat, "Fail: Bad State"
+
+    # Check that Fan will not timeout
+    state.idle(state.Mode.Fan)
+
+    room_temps.FAKE_TEMPS = [72,72]
+    for x in range(TIMEOUT_LIMIT*2):
+        main()
+        assert state.get() == state.Mode.Fan, "Fail: Bad State"
 
     print("Unit Test Complete: All Tests Passed")
 

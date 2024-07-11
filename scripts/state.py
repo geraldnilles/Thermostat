@@ -22,6 +22,10 @@ class Mode(Enum):
     Fan = auto()
 
 def set(mode):
+    
+    ## Clear the Timeout counter
+    timeout(0)
+    
     if os.getenv("TESTING"):
         print("Mode set to",mode)
 
