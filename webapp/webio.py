@@ -8,25 +8,27 @@ from pywebio.output import *
 from pywebio.pin import *
 
 
-def temp_down():
-    pass
 
-def render_table(value=72):
+def render_table():
     with use_scope("table",clear=True):
         put_table([
             ["Min","Current","Max"],
-            ["68",value,"77"],
+            ["68","72","77"],
             ])
 
 def new_offset(offset): 
     with open("/run/thermostat/offset.txt","w") as f:
         f.write(str(offset))
-    render_table(offset + 72) 
+    render_table() 
 
 def active_mode(mode): 
+    with open("/run/thermostat/active.txt","w") as f:
+        f.write(mode)
     toast(mode)
 
 def idle_mode(mode): 
+    with open("/run/thermostat/idle.txt","w") as f:
+        f.write(mode)
     toast(mode)
 
 def main():
@@ -53,11 +55,16 @@ def main():
     pin_on_change("offset",onchange=new_offset)
 
     put_markdown("## Mode")
-    put_select("mode",options=["Auto","Heat Only","Cool Only", "Fan","Off"], label="Active mode when temperature is out of range")
-    pin_on_change("mode",onchange=active_mode)
+    put_select("active",options=[("Auto (Heat and Cool)","Auto"),
+                                ("Heat Only","Heat"),
+                                ("Cool Only","Cool"), 
+                                ("Fan","Fan"),
+                                ("System Off","Off")], 
+                                label="Active mode when temperature is out of range")
+    pin_on_change("active",onchange=active_mode)
 
     put_markdown("## Idle")
-    put_radio("idle",options=["Off","Fan"],value="Off",label="Idle mode when temperature is within range")
+    put_radio("idle",options=[("Off","Off"),("Fan Always On","Fan")],label="Idle mode when temperature is within range")
     pin_on_change("idle",onchange=idle_mode)
 
 
