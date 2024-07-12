@@ -9,7 +9,7 @@ from pywebio.pin import *
 
 import room_temps
 
-
+import state
 
 def render_table(offset=0):
     with use_scope("table",clear=True):
@@ -96,6 +96,7 @@ def main():
     put_markdown("#### Latest Data")
     for t in room_temps.get():
         put_text("%0.1f"%t)
+    put_text("Current State: "+str(state.get()))
 
 if __name__ == '__main__':
     pywebio.config(theme="dark")
