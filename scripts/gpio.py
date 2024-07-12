@@ -3,6 +3,7 @@
 OFFSET = 512
 
 import os
+import time
 
 if os.getenv("TESTING"):
     CACHE = { 
@@ -43,7 +44,7 @@ def clear(num):
     num = OFFSET + num
     gpio_dir = "/sys/class/gpio/gpio%d"%num
     with open(gpio_dir+"/value","w") as f:
-        f.write(str(1))
+        f.write(str(0))
 
 def get(num):
     if os.getenv("TESTING"):
