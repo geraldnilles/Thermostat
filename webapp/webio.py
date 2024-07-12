@@ -48,7 +48,12 @@ def main():
 
 
     put_markdown("## Temperature Adjustment")
-    put_slider("offset",value=0,min_value=-3,max_value=3,label="Cooler <==> Warmer")
+    if os.path.exists("/run/thermostat/offset.txt"):
+        with open("/run/thermostat/offset.txt") as f:
+            current = int(f.read())
+    else:
+        current = 0
+    put_slider("offset",value=current,min_value=-3,max_value=3,label="Cooler <==> Warmer")
     pin_on_change("offset",onchange=new_offset)
 
     put_scope("table")
