@@ -94,5 +94,5 @@ def main():
 
 if __name__ == '__main__':
     pywebio.config(theme="dark")
-    start_server(main, port=8088, debug=True)
+    start_server(main, port=8080, debug=True)
 

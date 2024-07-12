@@ -5,7 +5,7 @@ Requires=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/opt/thermostat/run.sh
+ExecStart=/usr/share/thermostat/webio.py
 Restart=always
 
 [Install]

@@ -521,4 +521,4 @@ if __name__ == "__main__":
     if os.getenv("TESTING"):
         unit_test()
     else:
-        main(False)
+        main(True)
