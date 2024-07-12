@@ -9,11 +9,11 @@ from pywebio.pin import *
 
 
 
-def render_table():
+def render_table(offset=0):
     with use_scope("table",clear=True):
         put_table([
-            ["Min","Current","Max"],
-            ["68","72","77"],
+            ["Min Temp","Max Temp"],
+            [68+offset,77+offset],
             ])
 
 def new_offset(offset): 
@@ -55,16 +55,30 @@ def main():
     pin_on_change("offset",onchange=new_offset)
 
     put_markdown("## Mode")
+    if os.path.exists("/run/thermostat/active.txt"):
+        with open("/run/thermostat/active.txt") as f:
+            current = f.read()
+    else:
+        current = None
     put_select("active",options=[("Auto (Heat and Cool)","Auto"),
                                 ("Heat Only","Heat"),
                                 ("Cool Only","Cool"), 
                                 ("Fan","Fan"),
                                 ("System Off","Off")], 
+                                value = current,
                                 label="Active mode when temperature is out of range")
     pin_on_change("active",onchange=active_mode)
 
-    put_markdown("## Idle")
-    put_radio("idle",options=[("Off","Off"),("Fan Always On","Fan")],label="Idle mode when temperature is within range")
+    put_markdown("## Idle State")
+    if os.path.exists("/run/thermostat/idle.txt"):
+        with open("/run/thermostat/idle.txt") as f:
+            current = f.read()
+    else:
+        current = None
+    put_radio("idle",options=[("Off","Off"),
+                            ("Fan Always On","Fan")],
+                            value = current,
+                            label="Idle mode when temperature is within range")
     pin_on_change("idle",onchange=idle_mode)
 
 
