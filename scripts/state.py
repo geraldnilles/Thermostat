@@ -101,9 +101,9 @@ def timeout(value=None):
 # Reads which "Mode" is written tot he active.txt file
 def active(value=None):
     if value == None:
-        return Mode[state(default=Mode.Auto.name,fn="active.txt",value=value)]
+        return Mode[state(default=Mode.Off.name,fn="active.txt",value=value)]
     else:
-        return Mode[state(default=Mode.Auto.name,fn="active.txt",value=value.name)]
+        return Mode[state(default=Mode.Off.name,fn="active.txt",value=value.name)]
 
 # Reads which "Mode" is written tot he idle.txt file
 def idle(value=None):

@@ -25,7 +25,7 @@ class Inputs:
     temp_within_range = True
     temp_outside_range = False
     top_of_hour = False
-    active_mode = state.Mode.Auto
+    active_mode = state.Mode.Off
     idle_mode = state.Mode.Off
     timeout_counter = 0
 

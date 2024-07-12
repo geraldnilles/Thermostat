@@ -3,6 +3,7 @@
 import os
 import asyncio
 import datetime
+import pandas as pd
 
 if not os.getenv("TESTING"):
     import scan
