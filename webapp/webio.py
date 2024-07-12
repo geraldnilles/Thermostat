@@ -48,9 +48,13 @@ def main():
 
 
     put_markdown("## History")
-    # put_image()
+    if os.path.exists("/tmp/history.png"):
+        img = open('/tmp/history.png', 'rb').read()
+        put_image(img)
+    else:
+        put_markdown("Data being collected...\n\n Check back in a few minutes")
 
-    put_markdown("## Adjust Temps")
+    put_markdown("## Temperature Range Adjustment")
     put_slider("offset",value=0,min_value=-3,max_value=3,label="Temperature Range Offset")
     pin_on_change("offset",onchange=new_offset)
 
