@@ -26,7 +26,7 @@ install:
 	
 	mkdir -p $(DESTDIR)$(datarootdir)/thermostat
 	cp $(srcdir)/scripts/* $(DESTDIR)$(datarootdir)/thermostat/
-	cp $(srcdir)/webapps/webio.py $(DESTDIR)$(datarootdir)/thermostat/
+	cp $(srcdir)/webapp/webio.py $(DESTDIR)$(datarootdir)/thermostat/
 	
 	mkdir -p $(DESTDIR)$(systemd_unitdir)/system
 	cp $(srcdir)/systemd/* $(DESTDIR)$(systemd_unitdir)/system/
