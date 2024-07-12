@@ -243,6 +243,7 @@ def main(verbose = False):
 
 def unit_test():
     # Zero out to a nominal state
+    state.offset(0)
     state.active(state.Mode.Auto)
     state.idle(state.Mode.Off)
     room_temps.FAKE_TEMPS = [72, 72]
@@ -471,6 +472,48 @@ def unit_test():
     for x in range(TIMEOUT_LIMIT*2):
         main()
         assert state.get() == state.Mode.Fan, "Fail: Bad State"
+
+
+    # Test the the offset function works as expected
+    # Start with house temps slightly within the limits and then shift the offset 2 degrees in either direction
+    state.idle(state.Mode.Off)
+    state.active(state.Mode.Auto)
+    room_temps.FAKE_TEMPS = [69,76]
+
+    main()
+    assert state.get() == state.Mode.Off, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Off, "Fail: Bad State"
+
+    state.offset(-1)
+    main()
+    assert state.get() == state.Mode.Off, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Off, "Fail: Bad State"
+
+    state.offset(-2)
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Cool, "Fail: Bad State"
+
+    state.offset(0)
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Off, "Fail: Bad State"
+
+    state.offset(1)
+    main()
+    assert state.get() == state.Mode.Off, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Off, "Fail: Bad State"
+
+    state.offset(2)
+    main()
+    assert state.get() == state.Mode.Fan, "Fail: Bad State"
+    main()
+    assert state.get() == state.Mode.Heat, "Fail: Bad State"
 
     print("Unit Test Complete: All Tests Passed")
 
