@@ -522,3 +522,5 @@ if __name__ == "__main__":
         unit_test()
     else:
         main(True)
+        room_temps.plot()
+

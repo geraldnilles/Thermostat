@@ -29,3 +29,13 @@ def get():
 
     return averages
 
+def plot():
+    db = asyncio.run(scan.client())
+    df = db[db["Temp"] > 50]
+    df = df.groupby("Room").resample('2min', on="Time").mean().reset_index()
+    #print(df.tail(50))
+    ax = None
+    for room in pd.unique(db["Room"]):
+        ax = df[df["Room"]==room].plot.line(x="Time",y="Temp", ax=ax,label=room)
+    ax.figure.savefig("/tmp/history.png",format="png")
+
