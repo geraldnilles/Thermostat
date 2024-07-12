@@ -7,6 +7,8 @@ import pywebio
 from pywebio.output import *
 from pywebio.pin import *
 
+import room_temps
+
 
 
 def render_table(offset=0):
@@ -19,7 +21,7 @@ def render_table(offset=0):
 def new_offset(offset): 
     with open("/run/thermostat/offset.txt","w") as f:
         f.write(str(offset))
-    render_table() 
+    render_table(offset) 
 
 def active_mode(mode): 
     with open("/run/thermostat/active.txt","w") as f:
@@ -42,23 +44,17 @@ def main():
 
     put_markdown("# Nilles Thermostat")
 
-    put_scope("table")
-
-    render_table()
 
 
-    put_markdown("## History")
-    if os.path.exists("/tmp/history.png"):
-        img = open('/tmp/history.png', 'rb').read()
-        put_image(img)
-    else:
-        put_markdown("Data being collected...\n\n Check back in a few minutes")
 
-    put_markdown("## Temperature Range Adjustment")
-    put_slider("offset",value=0,min_value=-3,max_value=3,label="Temperature Range Offset")
+    put_markdown("## Temperature Adjustment")
+    put_slider("offset",value=0,min_value=-3,max_value=3,label="Cooler <==> Warmer")
     pin_on_change("offset",onchange=new_offset)
 
-    put_markdown("## Mode")
+    put_scope("table")
+    render_table()
+
+    put_markdown("## Heating/Cooling Mode")
     if os.path.exists("/run/thermostat/active.txt"):
         with open("/run/thermostat/active.txt") as f:
             current = f.read()
@@ -70,21 +66,31 @@ def main():
                                 ("Fan","Fan"),
                                 ("System Off","Off")], 
                                 value = current,
-                                label="Active mode when temperature is out of range")
+                                label="Set behavior when temperature is out of range")
     pin_on_change("active",onchange=active_mode)
 
-    put_markdown("## Idle State")
+    put_markdown("## Idle Mode")
     if os.path.exists("/run/thermostat/idle.txt"):
         with open("/run/thermostat/idle.txt") as f:
             current = f.read()
     else:
         current = None
-    put_radio("idle",options=[("Off","Off"),
+    put_select("idle",options=[("Fan Off","Off"),
                             ("Fan Always On","Fan")],
                             value = current,
-                            label="Idle mode when temperature is within range")
+                            label="Set behavior when temperature is within range")
     pin_on_change("idle",onchange=idle_mode)
 
+    put_markdown("## Room Temperature History")
+    if os.path.exists("/tmp/history.png"):
+        img = open('/tmp/history.png', 'rb').read()
+        put_image(img)
+    else:
+        put_markdown("Data being collected...\n\n Check back in a few minutes")
+
+    put_markdown("#### Latest Data")
+    for t in room_temps.get():
+        put_text("%0.1f"%t)
 
 if __name__ == '__main__':
     pywebio.config(theme="dark")
