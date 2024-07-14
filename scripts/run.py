@@ -61,7 +61,7 @@ def process_inputs():
         inputs.temp_outside_range = True
 
     if get_current_minutes() < 10:
-        inputs.top_of_hours = True
+        inputs.top_of_hour = True
 
 
     inputs.active_mode = state.active()
