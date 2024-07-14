@@ -15,7 +15,7 @@ db_cutoff = datetime.timedelta(days=1)
 govee_name_map = {
             "GVH5075_2787": "Govee_JoeyRoom",
             "GVH5075_7C2E": "Govee_MasterBed",
-            "GVH5075_A8FD": "Govee_GoldieRoom",
+            "GVH5075_4E32": "Govee_GoldieRoom",
             "GVH5075_B35A": "Govee_Kitchen"
             }
 
