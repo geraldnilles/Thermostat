@@ -57,7 +57,7 @@ def main():
     pin_on_change("offset",onchange=new_offset)
 
     put_scope("table")
-    render_table()
+    render_table(current)
 
     put_markdown("## Heating/Cooling Mode")
     if os.path.exists("/run/thermostat/active.txt"):
