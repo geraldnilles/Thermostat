@@ -220,6 +220,7 @@ def main(verbose = False):
     inputs = process_inputs()
     if verbose:
         print(inputs)
+        print(room_temps.get())
 
     current_state = state.get()
 
