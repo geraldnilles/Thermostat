@@ -45,7 +45,7 @@ def process_inputs():
 
     hysteresis = 0.5
 
-    for t in room_temps.get():
+    for room, t in room_temps.get().items():
         if t > max(temp_range):
             inputs.temp_above_range = True
             inputs.temp_within_range = False
@@ -247,84 +247,84 @@ def unit_test():
     state.offset(0)
     state.active(state.Mode.Auto)
     state.idle(state.Mode.Off)
-    room_temps.FAKE_TEMPS = [72, 72]
+    room_temps.FAKE_TEMPS = {"a":72, "b":72}
     main()
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [72, 76.6]
+    room_temps.FAKE_TEMPS = {"a":72, "b":76.6}
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [72, 77.1]
+    room_temps.FAKE_TEMPS = {"a":72, "b":77.1}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Cool, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [72, 76.6]
+    room_temps.FAKE_TEMPS = {"a":72, "b":76.6}
     main()
     assert state.get() == state.Mode.Cool, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Cool, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [72, 76.4]
+    room_temps.FAKE_TEMPS = {"a":72, "b":76.4}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [68.2, 72]
+    room_temps.FAKE_TEMPS = {"a":68.2, "b":72}
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [67.8, 72]
+    room_temps.FAKE_TEMPS = {"a":67.8, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Heat, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [68.2, 72]
+    room_temps.FAKE_TEMPS = {"a":68.2, "b":72}
     main()
     assert state.get() == state.Mode.Heat, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Heat, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [69, 72]
+    room_temps.FAKE_TEMPS = {"a":69, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [67, 72]
+    room_temps.FAKE_TEMPS = {"a":67, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Heat, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [67, 78]
+    room_temps.FAKE_TEMPS = {"a":67, "b":78}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [69, 78]
+    room_temps.FAKE_TEMPS = {"a":69, "b":78}
     main()
     assert state.get() == state.Mode.Cool, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Cool, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [67, 78]
+    room_temps.FAKE_TEMPS = {"a":67, "b":78}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [72,72]
+    room_temps.FAKE_TEMPS = {"a":72, "b":72}
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
     main()
@@ -333,19 +333,19 @@ def unit_test():
 
     state.idle(state.Mode.Fan)
 
-    room_temps.FAKE_TEMPS = [72,72]
+    room_temps.FAKE_TEMPS = {"a":72, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [65,72]
+    room_temps.FAKE_TEMPS = {"a":65, "b":72}
     main()
     assert state.get() == state.Mode.Heat, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Heat, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [79,72]
+    room_temps.FAKE_TEMPS = {"a":79, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
@@ -353,19 +353,19 @@ def unit_test():
 
     state.active(state.Mode.Off)
 
-    room_temps.FAKE_TEMPS = [72,72]
+    room_temps.FAKE_TEMPS = {"a":72, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [65,72]
+    room_temps.FAKE_TEMPS = {"a":65, "b":72}
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [79,72]
+    room_temps.FAKE_TEMPS = {"a":79, "b":72}
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
     main()
@@ -373,19 +373,19 @@ def unit_test():
 
     state.active(state.Mode.Heat)
 
-    room_temps.FAKE_TEMPS = [72,72]
+    room_temps.FAKE_TEMPS = {"a":72, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [65,72]
+    room_temps.FAKE_TEMPS = {"a":65, "b":72}
     main()
     assert state.get() == state.Mode.Heat, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Heat, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [79,72]
+    room_temps.FAKE_TEMPS = {"a":79, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
@@ -393,19 +393,19 @@ def unit_test():
 
     state.active(state.Mode.Cool)
 
-    room_temps.FAKE_TEMPS = [72,72]
+    room_temps.FAKE_TEMPS = {"a":72, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [65,72]
+    room_temps.FAKE_TEMPS = {"a":65, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [79,72]
+    room_temps.FAKE_TEMPS = {"a":79, "b":72}
     main()
     assert state.get() == state.Mode.Cool, "Fail: Bad State"
     main()
@@ -413,19 +413,19 @@ def unit_test():
 
     state.idle(state.Mode.Off)
 
-    room_temps.FAKE_TEMPS = [72,72]
+    room_temps.FAKE_TEMPS = {"a":72, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [65,72]
+    room_temps.FAKE_TEMPS = {"a":65, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
 
-    room_temps.FAKE_TEMPS = [79,72]
+    room_temps.FAKE_TEMPS = {"a":79, "b":72}
     main()
     assert state.get() == state.Mode.Cool, "Fail: Bad State"
     main()
@@ -436,14 +436,14 @@ def unit_test():
     state.idle(state.Mode.Off)
     state.active(state.Mode.Auto)
 
-    room_temps.FAKE_TEMPS = [72,72]
+    room_temps.FAKE_TEMPS = {"a":72, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"
 
     # Check the Cooling Timeout works correctly.  
-    room_temps.FAKE_TEMPS = [79,72]
+    room_temps.FAKE_TEMPS = {"a":79, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     for x in range(TIMEOUT_LIMIT+1):
@@ -455,7 +455,7 @@ def unit_test():
     assert state.get() == state.Mode.Cool, "Fail: Bad State"
 
     # Check the Heating Timeout works correctly.  
-    room_temps.FAKE_TEMPS = [67,72]
+    room_temps.FAKE_TEMPS = {"a":67, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
     for x in range(TIMEOUT_LIMIT+1):
@@ -469,7 +469,7 @@ def unit_test():
     # Check that Fan will not timeout
     state.idle(state.Mode.Fan)
 
-    room_temps.FAKE_TEMPS = [72,72]
+    room_temps.FAKE_TEMPS = {"a":72, "b":72}
     for x in range(TIMEOUT_LIMIT*2):
         main()
         assert state.get() == state.Mode.Fan, "Fail: Bad State"
@@ -479,7 +479,7 @@ def unit_test():
     # Start with house temps slightly within the limits and then shift the offset 2 degrees in either direction
     state.idle(state.Mode.Off)
     state.active(state.Mode.Auto)
-    room_temps.FAKE_TEMPS = [69,76]
+    room_temps.FAKE_TEMPS = {"a":69, "b":76}
 
     main()
     assert state.get() == state.Mode.Off, "Fail: Bad State"

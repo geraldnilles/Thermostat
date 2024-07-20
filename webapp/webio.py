@@ -94,9 +94,15 @@ def main():
         put_markdown("Data being collected...\n\n Check back in a few minutes")
 
     put_markdown("#### Latest Data")
-    for t in room_temps.get():
-        put_text("%0.1f"%t)
-    put_text("Current State: "+str(state.get()))
+    for room,t in room_temps.get().items():
+        put_row([
+            put_text(room),
+            put_text("%0.1f"%t)
+            ])
+    put_row([
+        put_text("Current State:"),
+        put_text(str(state.get()))
+        ])
 
 if __name__ == '__main__':
     pywebio.config(theme="dark")

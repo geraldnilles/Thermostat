@@ -3,13 +3,13 @@
 import os
 import asyncio
 import datetime
-import pandas as pd
 
 if not os.getenv("TESTING"):
+    import pandas as pd
     import scan
 
 if os.getenv("TESTING"):
-    FAKE_TEMPS = [72,73,74,78]
+    FAKE_TEMPS = {"x": 72, "y": 73, "z": 74,"a":78 }
 
 def get():
     
@@ -23,10 +23,10 @@ def get():
     cutoff = datetime.datetime.now() -  datetime.timedelta(minutes=2)
     df = df[df["Time"] > cutoff].reset_index(drop=True)
     rooms = df.Room.unique()
-    averages = []
+    averages = {}
     for r in rooms:
-	# Grap the last 5 reading and average them
-        averages.append(df[df["Room"] == r]["Temp"].mean())
+	    # Grab the last 2 minutes and average them
+        averages[r] = df[df["Room"] == r]["Temp"].mean()
 
     return averages
 
