@@ -45,6 +45,28 @@ def calculate_energy_consumption(log_entries):
     # COnvert to kWh
     return total_wh/1000
 
+def calculate_time_in_state(log_entries):
+    mode_times = {
+        Mode.Off: 0,
+        Mode.Fan: 0,
+        Mode.Heat: 0,
+        Mode.Cool: 0,
+        }
+    last_timestamp = None
+
+
+    for entry in log_entries:
+        parsed = parse_log_entry(entry)
+        if parsed:
+            timestamp, to_mode = parsed
+            if last_timestamp is not None:
+                duration = (timestamp - last_timestamp) / 3600  # Convert to hours
+                mode_times[Mode[to_mode.split('.')[-1]]] += duration
+            last_timestamp = timestamp
+
+    # COnvert to kWh
+    return mode_times
+
 def calculate_cost(kWh):
     return kWh*0.2
 
@@ -54,6 +76,9 @@ def main():
     cost = calculate_cost(total_kwh)
     print(f"Total energy consumed in the last 24 hours: {total_kwh:.2f} Wh")
     print(f"Total cost for the last 24 hours: $ {cost:.2f}")
+    mode_times = calculate_time_in_state(log_entries)
+    print(mode_times)
+    print("Cool Percent:",mode_times[Mode.Cool]/sum(mode_times.values()))
 
 if __name__ == "__main__":
     main()
