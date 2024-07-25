@@ -64,21 +64,31 @@ def calculate_time_in_state(log_entries):
                 mode_times[Mode[to_mode.split('.')[-1]]] += duration
             last_timestamp = timestamp
 
-    # COnvert to kWh
+    # Convert to kWh
     return mode_times
 
-def calculate_cost(kWh):
+def calculate_cost(log_entries):
+    kWh = calculate_energy_consumption(log_entries)
     return kWh*0.2
+    
+def calculate_cool_percentage(log_entries):
+    mode_times = calculate_time_in_state(log_entries)
+    return mode_times[Mode.Cool]/sum(mode_times.values())
 
 def main():
     log_entries = get_log_entries()
+
     total_kwh = calculate_energy_consumption(log_entries)
-    cost = calculate_cost(total_kwh)
-    print(f"Total energy consumed in the last 24 hours: {total_kwh:.2f} Wh")
-    print(f"Total cost for the last 24 hours: $ {cost:.2f}")
+    print(f"Energy Consumed [kWh]: {total_kwh:.2f}")
+
+    cost = calculate_cost(log_entries)
+    print(f"Cost [$]: {cost:.2f}")
+
     mode_times = calculate_time_in_state(log_entries)
-    print(mode_times)
-    print("Cool Percent:",mode_times[Mode.Cool]/sum(mode_times.values()))
+    print("Time in each mode [hours]:", mode_times)
+
+    cool_percent = calculate_cool_percentage(log_entries)
+    print("Cool Percentage:",int(cool_percent*100))
 
 if __name__ == "__main__":
     main()

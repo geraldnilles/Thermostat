@@ -8,6 +8,7 @@ from pywebio.output import *
 from pywebio.pin import *
 
 import room_temps
+import energy
 
 import state
 
@@ -15,7 +16,7 @@ def render_table(offset=0):
     with use_scope("table",clear=True):
         put_table([
             ["Min Temp","Max Temp"],
-            [68+offset,77+offset],
+            [68+offset,76+offset],
             ])
 
 def new_offset(offset): 
@@ -102,6 +103,18 @@ def main():
     put_row([
         put_text("Current State:"),
         put_text(str(state.get()))
+        ])
+
+    # Get log entries from the past 24 hours
+    log_entries = energy.get_log_entries()
+    put_row([
+        put_text("Cool Percentage [%]:"),
+        put_text(str(energy.calculate_cool_percentage(log_entries)*100))
+        ])
+
+    put_row([
+        put_text("Energy Cost from last 24 hours [$]:"),
+        put_text(str(energy.calculate_cost(log_entries)))
         ])
 
 if __name__ == '__main__':

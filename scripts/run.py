@@ -38,7 +38,7 @@ def process_inputs():
     inputs = Inputs()
 
     # Define the default temp range
-    temp_range = [68,77]
+    temp_range = [68,76]
     # Increase/Decrease by the offset
     offset = state.offset()
     temp_range = [t + offset for t in temp_range ]
