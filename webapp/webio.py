@@ -118,6 +118,19 @@ def main():
         ])
 
 if __name__ == '__main__':
-    pywebio.config(theme="dark")
-    start_server(main, port=8080, debug=True)
+    pywebio.config(title="Nilles Thermostat", description="Simple Web App to control thermostat.",theme="dark",
+            manifest={
+                "name": "Nilles Thermostat ",
+                "short_name": "Therm",
+                "display": "standalone",
+                "icon":"./static/therm-180.png",
+                "icons": [
+                    {"src": "static/therm-192.png", "type": "image/png", "sizes": "192x192"},
+                    {"src": "static/therm-512.png", "type": "image/png", "sizes": "512x512"},
+                ]
+            })
+
+    current_dir = os.path.dirname(__file__)
+    static_dir = os.path.join(current_dir, 'static')
+    start_server(main, port=8080, debug=True, static_dir=static_dir)
 
