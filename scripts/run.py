@@ -5,7 +5,8 @@ import state
 import datetime
 import room_temps
 
-TIMEOUT_LIMIT = 7
+COOL_TIMEOUT_LIMIT = 7
+HEAT_TIMEOUT_LIMIT = 2
 
 class Inputs:
     def __str__(self):
@@ -178,7 +179,7 @@ def cool_state(inputs):
         return True
 
     # If Cooling Timeout is reached, switch back to fan
-    if inputs.timeout_counter > TIMEOUT_LIMIT:
+    if inputs.timeout_counter > COOL_TIMEOUT_LIMIT:
         state.set(state.Mode.Fan)
         return True
         
@@ -211,7 +212,7 @@ def heat_state(inputs):
         return True
 
     # If Heating Timeout is reached, switch back to fan
-    if inputs.timeout_counter > TIMEOUT_LIMIT:
+    if inputs.timeout_counter > HEAT_TIMEOUT_LIMIT:
         state.set(state.Mode.Fan)
         return True
         
@@ -446,7 +447,7 @@ def unit_test():
     room_temps.FAKE_TEMPS = {"a":79, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
-    for x in range(TIMEOUT_LIMIT+1):
+    for x in range(COOL_TIMEOUT_LIMIT+1):
         main()
         assert state.get() == state.Mode.Cool, "Fail: Bad State"
     main()
@@ -458,7 +459,7 @@ def unit_test():
     room_temps.FAKE_TEMPS = {"a":67, "b":72}
     main()
     assert state.get() == state.Mode.Fan, "Fail: Bad State"
-    for x in range(TIMEOUT_LIMIT+1):
+    for x in range(HEAT_TIMEOUT_LIMIT+1):
         main()
         assert state.get() == state.Mode.Heat, "Fail: Bad State"
     main()
@@ -470,7 +471,7 @@ def unit_test():
     state.idle(state.Mode.Fan)
 
     room_temps.FAKE_TEMPS = {"a":72, "b":72}
-    for x in range(TIMEOUT_LIMIT*2):
+    for x in range(COOL_TIMEOUT_LIMIT*2):
         main()
         assert state.get() == state.Mode.Fan, "Fail: Bad State"
 
