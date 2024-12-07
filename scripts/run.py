@@ -35,6 +35,10 @@ def get_current_minutes():
     now = datetime.datetime.now()
     return now.minute
 
+def get_current_hour():
+    now = datetime.datetime.now()
+    return now.hour
+
 def process_inputs():
     inputs = Inputs()
 
@@ -61,8 +65,11 @@ def process_inputs():
     if inputs.temp_above_range and inputs.temp_below_range:
         inputs.temp_outside_range = True
 
+    # Circulate air for the first 10 minutes of each hour
     if get_current_minutes() < 10:
-        inputs.top_of_hour = True
+        # Only circulate air during the day
+        if get_current_hour() > 7 and get_current_hour < 21:
+            inputs.top_of_hour = True
 
 
     inputs.active_mode = state.active()
