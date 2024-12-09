@@ -68,7 +68,7 @@ def process_inputs():
     # Circulate air for the first 10 minutes of each hour
     if get_current_minutes() < 10:
         # Only circulate air during the day
-        if get_current_hour() > 7 and get_current_hour < 21:
+        if ( get_current_hour() > 7 ) and ( get_current_hour() < 21 ):
             inputs.top_of_hour = True
 
 
