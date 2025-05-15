@@ -7,6 +7,7 @@ import room_temps
 
 COOL_TIMEOUT_LIMIT = 7
 HEAT_TIMEOUT_LIMIT = 2
+FAN_TIMEOUT_LIMIT = 3
 
 class Inputs:
     def __str__(self):
@@ -157,6 +158,11 @@ def fan_state(inputs):
         if inputs.active_mode == state.Mode.Heat or inputs.active_mode == state.Mode.Auto:
             state.set(state.Mode.Heat)
             return True
+
+    # If Fan Timeout is reached, switch back to fan
+    if inputs.timeout_counter > FAN_TIMEOUT_LIMIT:
+        state.set(state.Mode.Off)
+        return True
 
 def cool_state(inputs):
     """
