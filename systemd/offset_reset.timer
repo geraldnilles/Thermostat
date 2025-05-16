@@ -5,6 +5,3 @@ Description=Reset the offset at 7AM
 OnCalendar=*-*-* 07:00:00
 Unit=set-offset@0.service
 
-[Install]
-WantedBy=thermostat.timer
-

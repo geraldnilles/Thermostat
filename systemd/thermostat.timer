@@ -1,5 +1,6 @@
 [Unit]
 Description=Run the thermostat script every minute
+Wants=cold_overnight.timer cool_down.timer warm_up.timer offset_reset.timer
 
 [Timer]
 OnBootSec=2min
