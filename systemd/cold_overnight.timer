@@ -1,0 +1,10 @@
+[Unit]
+Description=Reduce temperature by 2 degree at 1AM
+
+[Timer]
+OnCalendar=*-*-* 01:00:00
+Unit=set-offset@-2.service
+
+[Install]
+WantedBy=thermostat.timer
+

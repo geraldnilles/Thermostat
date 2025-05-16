@@ -1,0 +1,7 @@
+[Unit]
+Description=Set thermostat offset to %I
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "echo %i > /run/thermostat/offset.txt"
+

@@ -1,8 +1,0 @@
-[Unit]
-Description=Reduce temp by 2 degrees
-
-[Service]
-Type=oneshot
-ExecStart=/bin/sh -c 'echo "-2" > /run/thermostat/offset.txt'
-
-

@@ -1,8 +1,0 @@
-[Unit]
-Description=Reset the Temp offset to 0
-
-[Service]
-Type=oneshot
-ExecStart=/bin/rm /run/thermostat/offset.txt
-
-

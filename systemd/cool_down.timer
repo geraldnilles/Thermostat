@@ -1,9 +1,10 @@
 [Unit]
-Description=Cool down slighly at bedtime
+Description=Reduce temperature by 1 degree at 11 PM
 
 [Timer]
 OnCalendar=*-*-* 23:00:00
+Unit=set-offset@-1.service
 
 [Install]
-WantedBy=timers.target
+WantedBy=thermostat.timer
 

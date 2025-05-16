@@ -1,9 +1,10 @@
 [Unit]
-Description=Warm up when we wake up
+Description=Increase temperature by 1 degree at 6AM
 
 [Timer]
 OnCalendar=*-*-* 06:00:00
+Unit=set-offset@1.service
 
 [Install]
-WantedBy=timers.target
+WantedBy=thermostat.timer
 
