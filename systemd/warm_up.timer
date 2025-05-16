@@ -1,0 +1,9 @@
+[Unit]
+Description=Warm up when we wake up
+
+[Timer]
+OnCalendar=*-*-* 06:00:00
+
+[Install]
+WantedBy=timers.target
+

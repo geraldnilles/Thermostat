@@ -1,0 +1,8 @@
+[Unit]
+Description=Increase Temp by 1 degree 
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'echo "1" > /run/thermostat/offset.txt'
+
+
