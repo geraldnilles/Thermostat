@@ -1,5 +1,7 @@
 [Unit]
 Description=Reset the Thermostat Offset every morning
+Wants=time-sync.target
+After=time-sync.target
 
 [Timer]
 OnCalendar=*-*-* 07:00:00

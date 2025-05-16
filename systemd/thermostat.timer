@@ -1,5 +1,7 @@
 [Unit]
 Description=Run the thermostat script every minute
+Wants=time-sync.target
+After=time-sync.target
 
 [Timer]
 OnBootSec=5min
