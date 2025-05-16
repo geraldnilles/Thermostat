@@ -1,7 +1,5 @@
 [Unit]
 Description=Cool down slighly at bedtime
-Wants=time-sync.target
-After=time-sync.target
 
 [Timer]
 OnCalendar=*-*-* 23:00:00

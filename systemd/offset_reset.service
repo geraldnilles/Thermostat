@@ -1,5 +1,5 @@
 [Unit]
-Description=Reset the Timer
+Description=Reset the Temp offset to 0
 
 [Service]
 Type=oneshot

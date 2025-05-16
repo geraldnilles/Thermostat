@@ -1,7 +1,5 @@
 [Unit]
 Description=Warm up when we wake up
-Wants=time-sync.target
-After=time-sync.target
 
 [Timer]
 OnCalendar=*-*-* 06:00:00
